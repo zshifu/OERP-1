@@ -14,11 +14,15 @@ import java.time.ZoneOffset;
  * @date 2020/7/14 16:44
  */
 @Component
-public class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
+public class JacksonLocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
 
     @Override
     public void serialize(LocalDateTime localDateTime, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeNumber(localDateTime.toInstant(ZoneOffset.ofHours(8)).toEpochMilli());
     }
 
+    @Override
+    public Class<LocalDateTime> handledType() {
+        return LocalDateTime.class;
+    }
 }

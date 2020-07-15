@@ -21,6 +21,7 @@ public class SpringMvcConfiguration extends WebMvcConfigurationSupport {
 
     /**
      * 配置拦截器
+     *
      * @param registry
      */
     @Override

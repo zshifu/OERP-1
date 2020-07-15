@@ -1,12 +1,11 @@
 package com.juzi.oerp.config;
 
-import com.juzi.oerp.common.jackson.LocalDateTimeDeserializer;
-import com.juzi.oerp.common.jackson.LocalDateTimeSerializer;
+import com.juzi.oerp.common.jackson.JacksonLocalDateTimeDeserializer;
+import com.juzi.oerp.common.jackson.JacksonLocalDateTimeSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 import java.time.LocalDateTime;
 
@@ -21,19 +20,18 @@ public class JacksonConfiguration {
      * LocalDateTime 序列化器
      */
     @Autowired
-    private LocalDateTimeSerializer localDateTimeSerializer;
+    private JacksonLocalDateTimeSerializer jacksonLocalDateTimeSerializer;
 
     /**
      * LocalDateTime 反序列化器
      */
     @Autowired
-    private LocalDateTimeDeserializer localDateTimeDeserializer;
+    private JacksonLocalDateTimeDeserializer jacksonLocalDateTimeDeserializer;
 
     @Bean
-    @Primary
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
         return builder -> builder
-                .serializerByType(LocalDateTime.class, localDateTimeSerializer)
-                .deserializerByType(LocalDateTime.class, localDateTimeDeserializer);
+                .serializerByType(LocalDateTime.class, jacksonLocalDateTimeSerializer)
+                .deserializerByType(LocalDateTime.class, jacksonLocalDateTimeDeserializer);
     }
 }

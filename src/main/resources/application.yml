@@ -6,9 +6,6 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-  jackson:
-    serialization:
-      WRITE_DATES_AS_TIMESTAMPS: true
 
 mybatis-plus:
   configuration:

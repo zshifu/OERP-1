@@ -15,7 +15,7 @@ import java.time.ZoneOffset;
  * @date 2020/7/14 16:45
  */
 @Component
-public class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
+public class JacksonLocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
 
     @Override
     public LocalDateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
