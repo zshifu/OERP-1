@@ -1,16 +1,23 @@
 package com.juzi.oerp.service.impl;
 
+import cn.hutool.crypto.SecureUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.juzi.oerp.common.store.LocalUserStore;
 import com.juzi.oerp.dao.UserDAO;
 import com.juzi.oerp.mapper.UserInfoMapper;
 import com.juzi.oerp.mapper.UserMapper;
 import com.juzi.oerp.model.dto.CreateUserDTO;
 import com.juzi.oerp.model.dto.param.PageParamDTO;
 import com.juzi.oerp.model.dto.UpdateUserDTO;
+import com.juzi.oerp.model.po.UserExamPO;
 import com.juzi.oerp.model.po.UserInfoPO;
 import com.juzi.oerp.model.po.UserPO;
 import com.juzi.oerp.model.vo.UserInfoVO;
+import com.juzi.oerp.model.vo.response.ExceptionResponseVO;
+import com.juzi.oerp.model.vo.response.ResponseVO;
 import com.juzi.oerp.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +69,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         UserPO userPO = new UserPO();
         UserInfoPO userInfoPO = new UserInfoPO();
 
-        BeanUtils.copyProperties(createUserDTO,userPO);
-        BeanUtils.copyProperties(createUserDTO,userInfoPO);
+        BeanUtils.copyProperties(createUserDTO, userPO);
+        BeanUtils.copyProperties(createUserDTO, userInfoPO);
 
         userMapper.insert(userPO);
 
@@ -84,5 +91,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
 
         userInfoPO.setUserId(userPO.getId());
         userInfoMapper.updateById(userInfoPO);
+    }
+
+    @Override
+    public ResponseVO<Object> getUserByUserPhone(String userPhone) {
+        UserPO userPO = new UserPO();
+        userPO.setPhoneNumber(userPhone);
+        userPO = userMapper.selectOne(new QueryWrapper<>(userPO));
+        if (userPO == null) {
+            return new ResponseVO(60004, "手机号错误");
+        }
+        return new ResponseVO<>(userPO);
     }
 }

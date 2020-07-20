@@ -7,6 +7,7 @@ import com.juzi.oerp.model.dto.param.PageParamDTO;
 import com.juzi.oerp.model.dto.UpdateUserDTO;
 import com.juzi.oerp.model.po.UserPO;
 import com.juzi.oerp.model.vo.UserInfoVO;
+import com.juzi.oerp.model.vo.response.ResponseVO;
 
 /**
  * <p>
@@ -49,4 +50,11 @@ public interface UserService extends IService<UserPO> {
      * @param updateUserDTO 用户信息
      */
     void updateUser(UpdateUserDTO updateUserDTO);
+
+    /**
+     * 获取用户_根据 userPhone
+     * @param userPhone 用户手机号
+     * @return 单条用户信息
+     */
+    ResponseVO<Object> getUserByUserPhone(String userPhone);
 }

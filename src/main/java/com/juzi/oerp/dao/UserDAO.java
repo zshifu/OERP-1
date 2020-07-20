@@ -23,4 +23,11 @@ public interface UserDAO {
      * @return 用户信息
      */
     UserInfoVO getUserByUserId(@Param("userId") Integer userId);
+
+    /**
+     * 获取用户_根据用户 phoneNumber
+     * @param userPhone
+     * @return
+     */
+    UserInfoVO getUserByUsePhone(@Param("phone_number") String userPhone);
 }
