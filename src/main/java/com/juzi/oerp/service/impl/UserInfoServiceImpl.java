@@ -92,7 +92,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoPO>
             responseVO = new ResponseVO<>(60003, "两次密码输入不一致");
             return responseVO;
         } else {
-            UserPO userPO=userMapper.selectOne(new LambdaQueryWrapper<UserPO>().eq(UserPO::getPhoneNumber,retrieveUserDTO.getPhoneNumber()));
+            UserPO userPO=userMapper.selectOne(new LambdaQueryWrapper<UserPO>().eq(UserPO::getPhoneNumber,retrieveUserDTO.getCheckSMSCaptchaParamDTO().getPhoneNumber()));
             userPO.setPassword(SecureUtil.md5(newPassword));
             userPO.setUpdateTime(LocalDateTime.now());
             userMapper.updateById(userPO);
