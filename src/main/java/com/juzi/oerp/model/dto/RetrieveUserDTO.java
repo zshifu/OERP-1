@@ -18,22 +18,7 @@ public class RetrieveUserDTO {
     private String confirmPassword;
 
     /**
-     * 验证码 id
+     * 检验短信验证码需要的参数
      */
-    private String imageCaptchaId;
-
-    /**
-     * 图形验证码值
-     */
-    private String imageCaptcha;
-
-    /**
-     * 手机号码
-     */
-    private String phoneNumber;
-
-    /**
-     * 手机验证码值
-     */
-    private String captcha;
+    private CheckSMSCaptchaParamDTO checkSMSCaptchaParamDTO;
 }

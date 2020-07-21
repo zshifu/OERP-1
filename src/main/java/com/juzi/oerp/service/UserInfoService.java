@@ -23,18 +23,6 @@ public interface UserInfoService extends IService<UserInfoPO> {
     ResponseVO<Object> updatePassword(ChangePasswordDTO changePasswordDTO);
 
     /**
-     * 检测图形验证码
-     * @return
-     */
-    void checkImageCaptcha(String imageCaptchaId,String imageCaptcha);
-
-    /**
-     * 检测短信验证码
-     * @return
-     */
-    void checkPhoneCaptcha(String  phoneNum,String captcha);
-
-    /**
      * 重置密码
      * @param retrieveUserDTO
      * @return

@@ -40,9 +40,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoPO>
     @Resource
     private Cache smsCaptchaCache;
 
-    @Resource
-    private Cache imageCaptchaCache;
-
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public ResponseVO<Object> updatePassword(ChangePasswordDTO changePasswordDTO) {
@@ -51,8 +48,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoPO>
         ResponseVO<Object> responseVO = null;
         String oldPassword = userPO.getPassword();
         //判断密码输入是否为空
-        if (changePasswordDTO.getOldPassword().equals("") && changePasswordDTO.getNewPassword().equals("") && changePasswordDTO.getConfirmPassword().equals("")) {
-            responseVO = new ResponseVO<>(60001, "密码输入为空");
+        if (StringUtils.isEmpty(changePasswordDTO.getOldPassword())|| StringUtils.isEmpty(changePasswordDTO.getNewPassword()) || StringUtils.isEmpty(changePasswordDTO.getConfirmPassword())) {
+            responseVO = new ResponseVO<>(60001, "密码框输入为空");
             return responseVO;
         }
         //传过来的密码加密
@@ -75,39 +72,20 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoPO>
         return responseVO;
     }
 
-    public void checkImageCaptcha(String imageCaptchaId,String imageCaptcha){
-        String reallyImageCaptcha = imageCaptchaCache.get(imageCaptchaId, String.class);
-        if (StringUtils.isEmpty(reallyImageCaptcha)) {
-            throw new AuthenticationException(40000);
-        }
-
-        if (!reallyImageCaptcha.equals(imageCaptcha)) {
-            throw new AuthenticationException(40004);
-        }
-
-        imageCaptchaCache.put(imageCaptchaId, CacheConstants.CAPTCHA_CHECKED);
-    }
-
-    public void checkPhoneCaptcha(String  phoneNum,String captcha){
-        String reallySMSCpatcha = smsCaptchaCache.get(phoneNum, String.class);
-        if (StringUtils.isEmpty(reallySMSCpatcha)) {
-            throw new AuthenticationException(40000);
-        }
-
-        if (!reallySMSCpatcha.equals(captcha)) {
-            throw new AuthenticationException(40004);
-        }
-
-        smsCaptchaCache.put(phoneNum, CacheConstants.CAPTCHA_CHECKED);
-    }
 
     public ResponseVO<Object> resetPassword(RetrieveUserDTO retrieveUserDTO){
+        //检测手机号是否注册
+        String reallySMSCaptcha = smsCaptchaCache.get(retrieveUserDTO.getCheckSMSCaptchaParamDTO().getPhoneNumber(), String.class);
+        if (StringUtils.isEmpty(reallySMSCaptcha) || CacheConstants.CAPTCHA_CHECKED.equals(reallySMSCaptcha)) {
+            throw new AuthenticationException(40006);
+        }
+
         String newPassword=retrieveUserDTO.getNewPassword();
         String confirmPassword=retrieveUserDTO.getConfirmPassword();
         ResponseVO<Object> responseVO=null;
         //判断密码输入是否为空
-        if (newPassword.equals("") && confirmPassword.equals("")) {
-            responseVO = new ResponseVO<>(60001, "密码输入为空");
+        if (StringUtils.isEmpty(newPassword) || StringUtils.isEmpty(confirmPassword)) {
+            responseVO = new ResponseVO<>(60001, "密码框输入为空");
             return responseVO;
         }
         if (!newPassword.equals(confirmPassword)) {
@@ -120,6 +98,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoPO>
             userMapper.updateById(userPO);
             responseVO = new ResponseVO<>(userPO);
         }
+
+        // 删除短信验证码缓存
+        smsCaptchaCache.evict(retrieveUserDTO.getCheckSMSCaptchaParamDTO().getPhoneNumber());
         return responseVO;
     }
 }
